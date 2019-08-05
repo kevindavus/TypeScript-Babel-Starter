@@ -1,22 +1,103 @@
 {
-  "name": "babel-typescript-sample",
-  "version": "0.7.1",
+  "name": "ts-react-babel-parcel-starter",
+  "version": "1.0.0",
   "license": "MIT",
+  "engines": {
+    "node": ">= 8.11.0",
+    "npm": ">= 6.0.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.ts"
+    ],
+    "moduleNameMapper": {
+      ".+\\.css$": "<rootDir>/src/styleMock.ts"
+    },
+    "testMatch": [
+      "**/__tests__/*.(test|spec).(ts|tsx|js)"
+    ]
+  },
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "type-check:watch": "npm run type-check -- --watch",
-    "build": "npm run build:types && npm run build:js",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+    "build": "npm run type-check && parcel build ./src/index.html --public-url '/'",
+    "develop": "concurrently -r \"npm:type-check:watch\" \"npm:start\"",
+    "fix": "npm run fix:js && npm run prettier",
+    "ling:fix": "npm run test:js --fix",
+    "lint:list": "npm run lint:other && npm run lint:js",
+    "lint:other": "npm run prettier --list-different",
+    "lint": "eslint --ignore-path .gitignore --ignore-path .prettierignore \"**/*.{js,jsx,ts,tsx}\"",
+    "prettier:list": "prettier \"**/*.{json,md,scss,yaml,yml}\"",
+    "prettier": "npm run prettier --write",
+    "start": "parcel serve src/index.html",
+    "test": "jest",
+    "type-check:watch": "npm run type-check -- --watch",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-numeric-separator": "^7.2.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
-    "@babel/preset-env": "^7.4.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
-    "typescript": "^3.3.3"
+    "@testing-library/dom": "^5.6.1",
+    "@testing-library/jest-dom": "^4.0.0",
+    "@testing-library/react": "^8.0.7",
+    "@types/jest": "^24.0.16",
+    "@types/node": "^11.13.6",
+    "@types/react": "^16.8.24",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-test-renderer": "^16.8.3",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "@typescript-eslint/typescript-estree": "^1.13.0",
+    "acorn": "^6.2.1",
+    "caniuse-lite": "^1.0.30000988",
+    "concurrently": "^4.1.0",
+    "eslint": "6.1.0",
+    "eslint-config-prettier": "6.0.0",
+    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "1.3.1",
+    "jest": "^24.7.1",
+    "jest-extended": "^0.11.1",
+    "lint-staged": "9.2.1",
+    "parcel": "^1.12.3",
+    "parcel-bundler": "^1.12.3",
+    "parcel-plugin-babel-typescript": "^1.0.1",
+    "prettier": "1.18.2",
+    "react-test-renderer": "^16.8.6",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.4"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{json,md,scss,yaml,yml}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
